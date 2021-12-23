@@ -24,8 +24,12 @@ client.on("ready", () => {
             resp.on('end', () => {
                 console.log(JSON.parse(data).data.price);
                 // change the data and price as needed depending on API
-                console.log(JSON.parse(data).updated_at);
                 x = (JSON.parse(data).data.price);
+                x = x * 1000000;
+                x = x.toFixed(3);
+                // not needed if token price is big enough
+                console.log(x);
+                
                 client.user.setActivity('$' + x);
             });
 
