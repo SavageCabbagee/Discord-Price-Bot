@@ -12,7 +12,7 @@ client.on("ready", () => {
 
     function price()  {
         const https = require('https');
-        https.get('https://api.coingecko.com/api/v3/coins/terra-luna', (resp) => {
+        https.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=terra-luna', (resp) => {
             let data = '';
 
             // A chunk of data has been received.
@@ -22,9 +22,9 @@ client.on("ready", () => {
 
             // The whole response has been received. Print out the result.
             resp.on('end', () => {
-                
-                y = JSON.parse(data).market_data.price_change_24h
-                x = (JSON.parse(data).market_data.current_price.usd);
+                console.log(JSON.parse(data)[0].current_price);
+                y = JSON.parse(data)[0].price_change_percentage_24h;
+                x = (JSON.parse(data)[0].current_price);
                 console.log(x);
                 console.log(y);
                 if (y >= 0) {
