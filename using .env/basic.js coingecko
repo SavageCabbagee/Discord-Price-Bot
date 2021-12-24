@@ -1,0 +1,50 @@
+// Require the necessary discord.js classes
+require('dotenv').config();
+const { Client, Intents } = require('discord.js');
+
+
+// Create a new client instance
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+
+// When the client is ready, run this code (only once)
+client.on("ready", () => {
+    console.log(`Logged in as ${client.user.tag}!`)
+
+    function price()  {
+        const https = require('https');
+        https.get('https://api.coingecko.com/api/v3/coins/terra-luna', (resp) => {
+            let data = '';
+
+            // A chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
+                
+                y = JSON.parse(data).market_data.price_change_24h
+                x = (JSON.parse(data).market_data.current_price.usd);
+                console.log(x);
+                console.log(y);
+                if (y >= 0) {
+                    client.user.setActivity('$' + x + '↗️' + y + '%');
+                }
+                else {
+                    client.user.setActivity('$' + x + '↘️' + y + '%');
+                }
+            });
+
+        }); 
+        
+        
+    
+    }
+
+    setInterval(price, 1500);
+
+});
+    
+// Login to Discord with your client's token
+console.log(process.env.TOKEN);
+client.login(process.env.TOKEN);
