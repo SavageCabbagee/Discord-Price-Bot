@@ -1,0 +1,50 @@
+// Require the necessary discord.js classes
+require('dotenv').config();
+const { Client, Intents } = require('discord.js');
+
+
+// Create a new client instance
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+
+// When the client is ready, run this code (only once)
+client.on("ready", () => {
+    console.log(`Logged in as ${client.user.tag}!`)
+
+    function price() {
+        const rp = require('request-promise');
+        const requestOptions = {
+            method: 'GET',
+            uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=LUNA',
+
+            headers: {
+                'X-CMC_PRO_API_KEY': 'YOUR OWN API KEY'
+            },
+            json: true,
+            gzip: true
+        };
+
+        rp(requestOptions).then(response => {
+            y = response.data.LUNA.quote.USD.percent_change_24h;
+            x = (response.data.LUNA.quote.USD.price);
+            console.log(x);
+            console.log(y);
+            if (y >= 0) {
+                client.user.setActivity('$' + x + '↗️' + y + '%');
+            }
+            else {
+                client.user.setActivity('$' + x + '↘️' + y + '%');
+            }
+
+        }).catch((err) => {
+            console.log('API call error:', err.message);
+        });
+
+
+    };
+    setInterval(price, 300000);
+
+});
+    
+// Login to Discord with your client's token
+console.log(process.env.TOKEN);
+client.login(process.env.TOKEN);
